@@ -1,0 +1,1026 @@
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Chat</title>
+
+    <!-- Progess in about 15 hours at the moment -->
+
+    <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Skranji:wght@400;700&display=swap');
+
+        *{
+            font-family: 'Skranji', cursive;
+        }
+
+        body{
+            margin: 0;
+        }
+            
+        #ChatContainer{
+
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            overflow-x: hidden;
+
+        }
+
+        #Inputs{
+
+            display: flex;
+            width: 99vw;
+            height: 10vh;
+            background-color: transparent;
+            overflow: hidden;
+            position: fixed;
+            bottom: 0;
+
+        }
+
+        #Input::placeholder{
+
+            color: rgb(190, 190, 190);
+
+        }
+
+        #Input{
+
+            width: 80vw;
+            height: 10vh;
+            background-color: gray;
+            color: rgb(255, 255, 255);
+            /* border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px; */
+            font-size: 30px;
+            border-left: none;
+            border-right: none;
+
+        }
+
+        #send{
+
+            width: 10vw;
+            height: 10vh;
+            background-color: gray;
+            color: white;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            font-size: 30px;
+            border-left: none;
+
+        }
+
+        #files{
+
+            width: 5vw;
+            height: 10vh;
+            background-color: gray;
+            color: white;
+            font-size: 30px;
+            border-left: none;
+
+        }
+
+        #menu{
+
+            width: 10vw;
+            height: 10vh;
+            background-color: gray;
+            color: white;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            font-size: 30px;
+            border-right: none;
+
+        }
+
+        #menu:hover, #input:hover, #send:hover{
+
+            background-color:lightslategray;
+
+        }
+
+        .msg:last-of-type{
+            margin-bottom: 30vh;
+        }
+
+        .msg{
+            width: 50vw;
+            min-height: 20vh;
+            max-height: 460vh;
+            color: white;
+            margin: 10px;
+            border-radius: 20px;
+        }
+
+        .msg .avatar{
+            width: 5em;
+            height: 5em;
+            background-color: transparent;
+            color: white;
+            margin: 10px;
+            margin-bottom: -10;
+            border-radius: 20px;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .msg .name{
+            font-size: 2em;
+            color: white;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        .msg .tag{
+            font-size: 1.5em;
+            color: lightskyblue;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        .msg .tag:hover{
+            font-size: 1.5em;
+            color: lightseagreen;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        .msg .ver{
+            font-size: 0.8em;
+            color: cadetblue;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        .msg .message{
+            font-size: 1em;
+            display: block;
+            color: white;
+            margin: 10px;
+            word-wrap: break-word;
+        }
+
+        .p1{
+            background-color: darkblue;
+            float: right;
+        }
+
+        .p2{
+            background-color: darkgreen;
+            float: left;
+        }
+
+        .mention{
+            float: left;
+            background-color: darkred;
+            position: relative;
+            transform: translate(50%, 0);
+        }
+
+        .system{
+            float: left;
+            background-color: rgb(87, 87, 87);
+            position: relative;
+            transform: translate(50%, 0);
+            text-align: center;
+            min-height: 12vh;
+
+        }
+
+        .system .avatar{
+            display: none;
+            visibility: hidden;
+        }
+        
+        .system .name{
+            position: relative;
+            top: 30%;
+        }
+        
+        .system .message{
+            position: relative;
+            top: 30%;
+        }
+
+        #edit, #time, #remove{
+            width: 2.5em;
+            height: 2.5em;
+            text-align: center;
+            position: relative;
+            top: -5px;
+            background-color: transparent;
+            border-radius: 10px;
+            border-color: white;
+            transform: scale(1);
+        }
+
+        .p1 #edit:hover, .p1 #time:hover, .p1 #remove:hover{
+            transform: scale(1.1);
+            background-color: rgb(99, 99, 255);
+        }
+
+        .p2 #edit:hover, .p2 #time:hover, .p2 #remove:hover{
+            transform: scale(1.1);
+            background-color: rgb(93, 218, 93);
+        }
+
+        .mention #edit:hover, .mention #time:hover, .mention #remove:hover{
+            transform: scale(1.1);
+            background-color: rgb(225, 75, 75);
+        }
+
+        .system #edit:hover, .system #time:hover, .system #remove:hover{
+            transform: scale(1.1);
+            background-color: rgb(131, 131, 131);
+        }
+
+        #nav{
+            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(transparent, black);
+            width: 90%;
+            height: 90%;
+            border-radius: 30px;
+            border-color: white;
+            border-style: groove;
+            border-width: 10px;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        #nav button{
+            background-color: black;
+            width: 200px;
+            height: 100px;
+            border-radius: 30px;
+            border-color: white;
+            color: white;
+            font-size: 25px;
+        }
+        #nav button:hover{
+            border-width: 5px;
+        }
+
+        .input2{
+            width: 40vw;
+            height: 10vh;
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            text-align: center;
+            z-index: 101;
+            border-radius: 20px;
+        }
+        .input2::placeholder{
+            color: gray;
+        }
+
+    </style>
+
+    <script type="module" defer>
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, remove, ref, orderByChild, query, onChildAdded, onChildChanged, onChildRemoved, set, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getStorage, uploadBytesResumable, getDownloadURL, ref as ref2 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js" 
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBdedRhcCREbppF6zYEMDT3aNfWziSrooM",
+            authDomain: "pocketchat-91f6c.firebaseapp.com",
+            projectId: "pocketchat-91f6c",
+            storageBucket: "pocketchat-91f6c.appspot.com",
+            messagingSenderId: "90727721238",
+            appId: "1:90727721238:web:a2cb6da8e05811ad460837"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        
+        const inp = document.getElementById("input")
+        const chat = document.getElementById("ChatContainer")
+        const JsCh = ref(db, 'js/chat/');
+        inp.setAttribute("maxlength", 11466)
+
+        localStorage.setItem("version", "v1.3 rel")
+
+        //#region User ruid Setup
+        // set joined to 0
+        if (localStorage.getItem("joined") == undefined || localStorage.getItem("joined") == "" || localStorage.getItem("joined") == 'undefined'){
+            localStorage.setItem("joined", 0)
+        }
+        
+        // give user uid & set joined to 1
+        if (localStorage.getItem("joined") == 0){
+            localStorage.setItem("ruid", makeCode(20))
+            localStorage.setItem("joined", 1)
+        }
+        //#endregion pRXcFG
+
+        const ruid = localStorage.getItem("ruid")
+
+        if (localStorage.getItem("name") == undefined){
+            let ea = document.createElement("input")
+                ea.setAttribute("class", "input2")
+                ea.placeholder = "Name?"
+                ea.setAttribute("maxlength", 10)
+
+                document.body.append(ea)
+
+                ea.addEventListener("keypress", (e)=>{
+                if(e.keyCode == 13){
+                    if (ea.value.trim() != ''){
+                        localStorage.setItem("name", ea.value)
+                        ea.remove()
+                        location.reload()
+                    }
+                }
+                })
+        }
+
+        if (localStorage.getItem("pfp") == undefined){
+            localStorage.setItem("pfp", "https://firebasestorage.googleapis.com/v0/b/pocketchat-91f6c.appspot.com/o/No%20Avatar%20(White).png?alt=media&token=0c7b473c-1516-4806-99c8-6251ea5cde11")
+        }
+
+        let pfp = localStorage.getItem("pfp")
+
+        if (localStorage.getItem("tag") == undefined){
+            let ea = document.createElement("input")
+                ea.setAttribute("class", "input2")
+                ea.placeholder = "UserTag?"
+                ea.setAttribute("maxlength", 10)
+
+                document.body.append(ea)
+
+                ea.addEventListener("keypress", (e)=>{
+                if(e.keyCode == 13){
+                    if (ea.value.trim() != ''){
+                        localStorage.setItem("tag", ea.value)
+                        ea.remove()
+                        location.reload()
+                    }
+                }
+                })
+        }
+
+        if (localStorage.getItem("code") == undefined){
+            localStorage.setItem("code", "main")
+            location.reload()
+        }
+        
+        let username = localStorage.getItem("name")
+        let tag = localStorage.getItem("tag")
+        const AllRooms = ref(db, 'chats/');
+        const CurrentRoom = query(ref(db, 'chats/' + localStorage.getItem("code")), orderByChild("index"));
+
+        document.getElementById("profC").addEventListener("change", (e)=>{
+            const file = document.getElementById("profC").files[0]
+
+            const storage = getStorage();
+
+            // Create the file metadata
+            /** @type {any} */
+            const metadata = {
+            contentType: 'image/jpeg'
+            };
+
+            // Upload file and metadata to the object 'images/mountains.jpg'
+            const storageRef = ref2(storage, 'avatars/' + ruid + ".png");
+            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed',
+            (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                case 'running':
+                    console.log('Upload is running');
+                    break;
+                }
+            }, 
+            (error) => {
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                case 'storage/unauthorized':
+                    // User doesn't have permission to access the object
+                    break;
+                case 'storage/canceled':
+                    // User canceled the upload
+                    break;
+
+                // ...
+
+                case 'storage/unknown':
+                    // Unknown error occurred, inspect error.serverResponse
+                    break;
+                }
+            }, 
+            () => {
+                // Upload completed successfully, now we can get the download URL
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                pfp = downloadURL
+                localStorage.setItem("pfp", downloadURL)
+                });
+            }
+            );
+        })
+
+        document.getElementById("files").addEventListener("click", ()=>{
+            document.getElementById("fileC").click()
+        })
+
+        document.getElementById("fileC").addEventListener("change", (e)=>{
+            const file = document.getElementById("fileC").files[0]
+
+            const storage = getStorage();
+
+            // Create the file metadata
+            /** @type {any} */
+            const metadata = {
+            contentType: 'image/jpeg'
+            };
+
+            // Upload file and metadata to the object 'images/mountains.jpg'
+            const storageRef = ref2(storage, "files/" + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed',
+            (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                case 'running':
+                    console.log('Upload is running');
+                    break;
+                }
+            }, 
+            (error) => {
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                case 'storage/unauthorized':
+                    // User doesn't have permission to access the object
+                    break;
+                case 'storage/canceled':
+                    // User canceled the upload
+                    break;
+
+                // ...
+
+                case 'storage/unknown':
+                    // Unknown error occurred, inspect error.serverResponse
+                    break;
+                }
+            }, 
+            () => {
+                // Upload completed successfully, now we can get the download URL
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                inp.value = inp.value + "~embed" + downloadURL + "embed~"
+                });
+            }
+            );
+        })
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function SetData(DataPath, Data) {
+            set(DataPath, Data);
+        }
+        
+        function getMsgsindex(){
+            let msgs = 0
+            onValue(CurrentRoom, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childKey = childSnapshot.key;
+                const childData = childSnapshot.val();
+                msgs += 1
+            });
+            }, {
+            onlyOnce: true
+            });
+            return msgs
+        }
+        
+        function getMsgstxt(){
+            let msgtxt = []
+            onValue(CurrentRoom, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childKey = childSnapshot.key;
+                const childData = childSnapshot.val();
+                msgtxt.push(childData.name + " : " + childData.msg)
+            });
+            }, {
+            onlyOnce: true
+            });
+            return msgtxt
+        }
+
+        function makeCode(Length) {
+            let charlist = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+            let char = () => {
+                return charlist[getRandomInt(0, 61)]
+            }
+            let code = ""
+
+            for (let i = 0; i < Length; i++){
+
+                code = code + "" + char() 
+
+            }
+
+            return code
+        }
+
+        function CreateMsgBox(msgid, type, useravatar, name, msg, data){
+
+            let MsgContainer = document.createElement("div")
+            MsgContainer.setAttribute("class", "msg "+type)
+
+            let avatar = document.createElement("img")
+            avatar.setAttribute("class", "avatar")
+            avatar.src = useravatar || "https://firebasestorage.googleapis.com/v0/b/pocketchat-91f6c.appspot.com/o/No%20Avatar.png?alt=media&token=0c7b473c-1516-4806-99c8-6251ea5cde11"
+
+            let username = document.createElement("span")
+            username.setAttribute("class", "name")
+
+            let tag = document.createElement("span")
+            tag.setAttribute("class", "tag")
+
+            let ver = document.createElement("span")
+            ver.setAttribute("class", "ver")
+
+            if (data.val().tag.toLowerCase() != "system"){
+                username.innerText = name + "  "
+                tag.innerText = "@"+data.val().tag + "  "
+                ver.innerText = data.val().ver  + "    "
+            }else {
+                username.innerText = name + " "
+                ver.innerText = data.val().ver + "    "
+            }
+            let edit = document.createElement("button")
+            edit.setAttribute("id", "edit")
+            edit.innerText = "✏️"
+            let time = document.createElement("button")
+            time.setAttribute("id", "time")
+            time.innerText = "⏳"
+            let remove = document.createElement("button")
+            remove.setAttribute("id", "remove")
+            remove.innerText = "❌"
+
+            let message
+
+            if (msg.includes("~embed") && msg.includes("embed~")){
+                if (msg.includes(".png") || msg.includes(".jpg") || msg.includes(".bitmap") || msg.includes("img")){
+                    message=document.createElement("img")
+                    message.setAttribute("class", "message")
+                    message.setAttribute("msgid", msgid)
+                    message.style.width = 650
+                    message.style.height = 400
+                    message.style.backgroundColor = "black"
+                    message.src = msg.replace("~embed", "").replace("embed~", "")
+                }else if (msg.includes("youtu.be") || msg.includes("youtube")){
+                    message=document.createElement("iframe")
+                    message.setAttribute("class", "message")
+                    message.setAttribute("msgid", msgid)
+                    let v = msg.replace("~embed", "").replace("embed~", "").replace("&l", "?").replace("https://www.youtube.com/watch?v=", "https://www.youtube-nocookie.com/embed/").replace("https://youtu.be/", "https://www.youtube-nocookie.com/embed/").replace("https://www.youtube.com/shorts/", "https://www.youtube-nocookie.com/embed/")
+                    const url = new URL(v)
+                    let c = v.replace(`?${url.search}`, "")
+                    message.src = c
+                    message.width = 650
+                    message.height = 400
+                    message.allowfullscreen = "true"
+                    message.frameborder="0"
+                    message.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                }else{
+                    message=document.createElement("iframe")
+                    message.setAttribute("class", "message")
+                    message.setAttribute("msgid", msgid)
+                    //message.controls = "controls"
+                    message.width = 650
+                    message.height = 400
+                    //message.style.backgroundColor = "black"
+                    if (msg.includes("scratch.mit.edu") && msg.replace("~embed", "").replace("embed~", "").includes("/embed~")){
+                        message.src = msg.replace("~embed", "").replace("embed~", "")+"embed"
+                    }else if(msg.includes("scratch.mit.edu") && !msg.replace("~embed", "").replace("embed~", "").includes("/embed")){
+                        message.src = msg.replace("~embed", "").replace("embed~", "")+"embed"
+                    }else if(msg.includes("scratch.mit.edu")){
+                        message.src = msg.replace("~embed", "").replace("embed~", "")
+                    }else {
+                        message.src = msg.replace("~embed", "").replace("embed~", "")
+                    }
+                }
+            }else{
+                message=document.createElement("span")
+                message.setAttribute("class", "message")
+                message.setAttribute("msgid", msgid)
+                message.innerText = msg
+            }
+            message.setAttribute("editmsg", "no")
+
+            MsgContainer.append(avatar, username, tag, ver, edit, time, remove, message)
+
+            document.getElementById("ChatContainer").append(MsgContainer)
+
+            tag.addEventListener("click", ()=>{
+                inp.value = "@"+data.val().tag + " " + inp.value
+            })
+
+            if (data.val().edited != true){
+                time.style.display = "none"
+            }
+
+            time.addEventListener("click", ()=>{
+                let e = message.getAttribute("editmsg")
+
+                if (e == "yes"){
+                    message.setAttribute("editmsg", "no")
+                    message.innerText = data.val().msg
+                }else{
+                    message.setAttribute("editmsg", "yes")
+                    message.innerText = "* " + data.val().editmsg + " *"
+                }
+                
+            })
+// mdtkoolaid#0871
+            remove.addEventListener("click", ()=>{
+                SetData(ref(db, 'chats/' + localStorage.getItem("code")+"/msg-"+data.val().index), {
+                    avatar:data.val().avatar,
+                    name:data.val().name,
+                    tag:data.val().tag,
+                    edited: false,
+                    editmsg: data.val().msg,
+                    ver: data.val().ver,
+                    msg: null,
+                    index: data.val().index
+                })
+
+            })
+            
+            edit.addEventListener("click", ()=>{
+
+                let ea = document.createElement("input")
+                ea.setAttribute("class", "input2")
+                ea.placeholder = "New Message"
+                ea.value = msg
+
+                document.body.append(ea)
+
+                ea.addEventListener("keypress", (e)=>{
+                if(e.keyCode == 13){
+                    if (ea.value.trim() != ""){
+                        SetData(ref(db, 'chats/' + localStorage.getItem("code")+"/msg-"+data.val().index), {
+                            avatar:data.val().avatar,
+                            name:data.val().name,
+                            tag:data.val().tag,
+                            edited: true,
+                            editmsg: msg,
+                            ver: data.val().ver,
+                            msg: ea.value,
+                            index: data.val().index
+                        })
+                        ea.remove()
+                    }else{
+                        ea.remove()
+                    }
+                }
+                })
+            })
+
+            return [edit, time, remove]
+
+        }
+        
+        onChildAdded(CurrentRoom, (data) => {
+
+            let msgType
+
+            if (data.val().tag == "System"){
+                msgType = "system"
+            }else if (data.val().msg.toLowerCase().includes("@"+tag.toLowerCase()) || data.val().msg.toLowerCase().includes("@everyone")){
+                msgType = "mention"
+            }else if (data.val().tag == tag){
+                msgType = "p1"
+            }else if (data.val().tag != tag) {
+                msgType = "p2"
+            }
+
+            let msgs = CreateMsgBox(data.val().index, msgType, data.val().avatar, data.val().name, data.val().msg, data)
+        
+            let edit = msgs[0]
+            let time = msgs[1]
+            let remove = msgs[2]
+            if (data.val().tag != tag) {
+                if (localStorage.getItem("admin") != "true" || data.val().tag == "undefined"){
+                    edit.remove()
+                    remove.remove()
+                }
+            }
+            if (localStorage.getItem("admin") != "true"){
+                
+            }
+
+            if (data.val().index != undefined){
+                console.log(data.val().index)
+            }
+
+            if (chat.scrollTop > chat.scrollHeight - 1000){
+                chat.scrollTop = chat.scrollHeight
+            }
+
+        })
+        chat.scrollTop = chat.scrollHeight
+        
+
+        onChildChanged(CurrentRoom, (data) => {
+
+            for (let i = 0; i <  document.getElementsByClassName("msg").length; i++){
+                if (document.getElementsByClassName("message")[i].getAttribute("msgID") == data.val().index){
+                    document.getElementsByClassName("message")[i].parentElement.querySelector("#time").style.display = ""
+                    if (data.val().msg == null || data.val().msg == undefined){
+                        document.getElementsByClassName("message")[i].parentElement.remove()
+                    }else{
+                        document.getElementsByClassName("message")[i].innerText = data.val().msg
+                    }
+                }
+            }
+//pRXcFG ut2ZVXcGVO
+        })
+
+        onChildRemoved(AllRooms, (data) => {
+
+            location.reload()
+
+        })
+
+        function SendMsg(pfp, name, tag, msg){
+            SetData(ref(db, 'chats/' + localStorage.getItem("code")+"/msg-"+getMsgsindex()), {
+                avatar:pfp,
+                name:username,
+                tag: tag,
+                msg:msg,
+                edited: false,
+                editmsg: msg,
+                ver: localStorage.getItem("version"),
+                index: getMsgsindex()
+            })
+        }
+
+        inp.addEventListener("keypress", (e)=>{
+            if(e.keyCode == 13){
+                if (inp.value.trim() != ""){
+                    SendMsg(pfp, username, tag, inp.value)
+                    inp.value = ""
+                }
+            }
+        })
+
+        document.getElementById("prof").addEventListener("click", ()=>{
+            document.getElementById("profC").click()
+        })
+
+        document.getElementById("send").addEventListener("click", ()=>{     
+            if (inp.value.trim() != ""){
+                SendMsg(pfp, username, tag, inp.value)
+                inp.value = ""
+            }
+        })
+
+        document.getElementById("menu").addEventListener("click", ()=>{
+
+            document.getElementById("nav").style.visibility = "visible"
+
+            document.getElementById("exit").addEventListener("click", ()=>{
+
+                document.getElementById("nav").style.visibility = "hidden"
+
+            })
+        // })
+
+
+            document.getElementById("newroom").addEventListener("click", ()=>{
+                const code = makeCode(10)
+                SetData(ref(db, 'chats/' + code +"/msg-"+0), {
+                avatar: "https://firebasestorage.googleapis.com/v0/b/pocketchat-91f6c.appspot.com/o/No%20Avatar%20(White).png?alt=media&token=0c7b473c-1516-4806-99c8-6251ea5cde11",
+                name: "System Message",
+                tag: "System",
+                msg: "This is the start of a new chatroom, the code for this room is "+code,
+                index: 0
+                })
+                localStorage.setItem("code", code)
+                location.reload()
+            })
+
+
+            document.getElementById("name").addEventListener("click", ()=>{
+
+                let ea = document.createElement("input")
+                ea.setAttribute("class", "input2")
+                ea.placeholder = "Name?"
+                ea.setAttribute("maxlength", 10)
+
+                document.body.append(ea)
+
+                ea.addEventListener("keypress", (e)=>{
+                if(e.keyCode == 13){
+                    if (ea.value.trim() != ''){
+                        localStorage.setItem("name", ea.value)
+                        ea.remove()
+                        location.reload()
+                    }else{
+                        ea.remove()
+                    }
+                }
+                })
+
+            })
+
+
+            document.getElementById("joinroom").addEventListener("click", ()=>{
+
+                let ea = document.createElement("input")
+                ea.setAttribute("class", "input2")
+                ea.placeholder = "Room Code?"
+
+                document.body.append(ea)
+
+                ea.addEventListener("keypress", (e)=>{
+                if(e.keyCode == 13){
+                    if (ea.value != ''){
+                        localStorage.setItem("code", ea.value)
+                        ea.remove()
+                        location.reload()
+                    }else{
+                        ea.remove()
+                    }
+                }
+                })
+
+            })
+
+        })
+
+        //onChildAdded(JsCh, (data) => {
+        //    eval(data.val().script)
+        //});
+
+        //function SetData2(src) {
+        //    set(ref(db, 'js/chat/e4'), {
+        //      script: src
+        //    });
+        //}
+
+        ///SetData2(`
+        //    let url = 'https://drive.google.com/file/d/11JM61PfdBG4UEsS58RZmPtT-vTmLghdV/view?usp=share_link'
+        //    if ( localStorage.getItem("version") == undefined || localStorage.getItem("version") == "v1.0 rel"){
+        //        location.href = url
+        //    }
+        //`)
+
+        SetData2(`
+
+        `)
+
+    </script>
+    
+</head>
+    
+    <body>
+
+        <input type="file" name="" id="fileC" style="display: none;">
+
+        <div id="nav">
+            <button id="exit">
+                Exit Menu
+            </button>
+
+            <button id="name">
+                New Name
+            </button>
+
+            <button id="prof">
+                Change Pfp
+            </button>
+
+            <input type="file" name="" id="profC" style="display: none;">
+
+            <button id="newroom">
+                New Room
+            </button>
+
+            <button id="joinroom">
+                Join Room
+            </button>
+        </div>
+
+        <div id="ChatContainer">
+
+            <!-- <div class="msg system">
+                <img
+                src="./No Avatar (White).png"
+                class = "avatar"
+                >
+                <span class="name">
+                    System Message
+                </span>
+                <button id="edit">✏️</button>
+                <span class="message">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iusto adipisci sit eaque accusantium, laudantium dolores sint culpa nam nihil deserunt molestias doloribus nemo voluptates expedita aliquam quisquam facere ipsam nobis.
+                </span>
+            </div>
+
+            <div class="msg mention">
+                <img
+                src="./No Avatar.png"
+                class = "avatar"
+                >
+                <span class="name">
+                    Name
+                </span>
+                <span class="tag" id="tag">
+                    @tag
+                </span>
+                <span class="ver">
+                    v1.3 rel
+                </span>
+                <button id="edit">✏️</button>
+                <span class="message">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iusto adipisci sit eaque accusantium, laudantium dolores sint culpa nam nihil deserunt molestias doloribus nemo voluptates expedita aliquam quisquam facere ipsam nobis.
+                </span>
+            </div>
+
+            <div class="msg p1">
+                <img
+                src="./No Avatar.png"
+                class = "avatar"
+                >
+                <span class="name">
+                    Name
+                </span>
+                <span class="tag" id="tag">
+                    @tag
+                </span>
+                <span class="ver">
+                    v1.3 rel
+                </span>
+                <button id="edit">✏️</button>
+                <span class="message">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iusto adipisci sit eaque accusantium, laudantium dolores sint culpa nam nihil deserunt molestias doloribus nemo voluptates expedita aliquam quisquam facere ipsam nobis.
+                </span>
+            </div>
+
+            <div class="msg p2">
+                <img
+                src="./No Avatar.png"
+                class = "avatar"
+                >
+                <span class="name">
+                    Name
+                </span>
+                <span class="tag" id="tag">
+                    @tag
+                </span>
+                <span class="ver">
+                    v1.3 rel
+                </span>
+                <button id="edit">✏️</button>
+                <span class="message">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem aperiam, minima vitae optio in laboriosam fugit natus quam sint repudiandae, voluptas modi magni harum facere ipsum ad? Eius, vitae unde.
+                </span>
+            </div> -->
+
+        </div>
+        <div id="inputs">
+            <button id="menu"> Menu </button>
+            <input type="text" id="input" placeholder="Type your message here...">
+            <button id="files"> 📁 </button>
+            <button id="send"> Send </button>
+        </div>
+
+        </div>
+    </body>
+</html>
